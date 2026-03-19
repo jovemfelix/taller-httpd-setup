@@ -17,8 +17,10 @@ else
 fi
 
 # --- Install Tekton Tasks ---
-oc apply -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-clone/0.9/git-clone.yaml
-oc apply -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/buildah/0.6/buildah.yaml
+# oc apply -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/git-clone/0.9/git-clone.yaml
+# oc apply -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/buildah/0.6/buildah.yaml
+oc apply -f tasks/buildah.yaml
+oc apply -f tasks/git-clone.yaml
 
 # --- Credentials ---
 cat <<EOF | oc apply -f -
