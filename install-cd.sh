@@ -1,7 +1,13 @@
 #!/bin/bash
 
 # --- Configuration Variables ---
-ARGO_NAMESPACE=argocd-taller
+source "$(dirname "$0")/load_env.sh"
+
+# Evalúa la variable. Si falla, el script muere aquí mismo.
+: "${ARGO_NAMESPACE:?Error fatal: GITHUB_USER debe estar definida para continuar}"
+
+# Si el script llega a esta línea, es 100% seguro que ambas variables tienen valor
+echo "Todas las credenciales validadas. Ejecutando despliegue..."
 
 # --- Project Setup ---
 if ! oc get project "$ARGO_NAMESPACE" &> /dev/null; then

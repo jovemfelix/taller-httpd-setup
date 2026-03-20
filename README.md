@@ -18,6 +18,24 @@ The following diagram illustrates the complete CI/CD flow automated by these scr
 
 ## Execution Order
 
+> Variables archivo .env
+```bash
+# CI
+APP_IMAGE_NAME='httpd-demo'
+APP_NEW_IMAGE_TAG='1.0.0'
+GITHUB_CONFIG_REPO=https://github.com/tu-nombre/taller-httpd-release-engineering.git
+GITHUB_SOURCE_REPO=https://github.com/tu-nombre/taller-httpd-application-engineering.git
+GITHUB_TOKEN=ghp_XXXXX
+GITHUB_USER=tu-nombre
+NAMESPACE=cicd-tu-nombre
+
+# CD/ARGO
+ARGO_AUTHOR=tu-nombre
+ARGO_ENV=dev
+ARGO_NAMESPACE=argocd-taller
+ARGO_TEAM=application
+
+```
 1. Log in to OpenShift as an administrator.
 ```bash
 oc login -u admin  https://api.cluster.apps.com:6443

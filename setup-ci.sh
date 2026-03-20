@@ -1,13 +1,19 @@
 #!/bin/bash
 
 # --- Configuration Variables ---
-NAMESPACE=cicd-tu-nombre
-GITHUB_USER=tu-usuario
-GITHUB_TOKEN=tu-token
-GITHUB_SOURCE_REPO=https://github.com/jovemfelix/taller-httpd-application-engineering.git
-GITHUB_CONFIG_REPO=https://github.com/jovemfelix/taller-httpd-release-engineering.git
-APP_NEW_IMAGE_TAG='1.0.1'
-APP_IMAGE_NAME='httpd-demo' 
+source "$(dirname "$0")/load_env.sh"
+
+# Evalúa la variable. Si falla, el script muere aquí mismo.
+: "${NAMESPACE:?Error fatal: NAMESPACE debe estar definida para continuar}"
+: "${GITHUB_USER:?Error fatal: GITHUB_USER debe estar definida para continuar}"
+: "${GITHUB_TOKEN:?Error fatal: GITHUB_TOKEN debe estar definida para continuar}"
+: "${GITHUB_SOURCE_REPO:?Error fatal: GITHUB_SOURCE_REPO debe estar definida para continuar}"
+: "${GITHUB_CONFIG_REPO:?Error fatal: GITHUB_CONFIG_REPO debe estar definida para continuar}"
+: "${APP_NEW_IMAGE_TAG:?Error fatal: APP_NEW_IMAGE_TAG no puede estar vacía}"
+: "${APP_IMAGE_NAME:?Error fatal: APP_IMAGE_NAME no puede estar vacía}"
+
+# Si el script llega a esta línea, es 100% seguro que ambas variables tienen valor
+echo "Todas las credenciales validadas. Ejecutando despliegue..."
 
 # --- Project Setup ---
 if ! oc get project "$NAMESPACE" &> /dev/null; then

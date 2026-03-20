@@ -1,13 +1,19 @@
 #!/bin/bash
 
 # --- Configuration Variables ---
-APP_NAMESPACE=cicd-tu-nombre
-ARGO_NAMESPACE=argocd-taller
-GITHUB_CONFIG_REPO=https://github.com/jovemfelix/taller-httpd-release-engineering.git
-APP_UID='httpd-demo-renato' 
+source "$(dirname "$0")/load_env.sh"
+
+# Evalúa la variable. Si falla, el script muere aquí mismo.
+: "${NAMESPACE:?Error fatal: NAMESPACE debe estar definida para continuar}"
+: "${ARGO_NAMESPACE:?Error fatal: GITHUB_USER debe estar definida para continuar}"
+: "${GITHUB_CONFIG_REPO:?Error fatal: GITHUB_CONFIG_REPO debe estar definida para continuar}"
+: "${ARGO_APP_NAME:?Error fatal: ARGO_APP_NAME no puede estar vacía}"
+
+# Si el script llega a esta línea, es 100% seguro que ambas variables tienen valor
+echo "Todas las credenciales validadas. Ejecutando despliegue..."
 
 # --- Project Configuration ---
-oc label namespace $APP_NAMESPACE argocd.argoproj.io/managed-by=argocd-taller --overwrite
+oc label namespace $NAMESPACE argocd.argoproj.io/managed-by=argocd-taller --overwrite
 
 # --- ArgoCD Application Definition ---
 cat <<EOF | oc apply -f -
@@ -15,12 +21,12 @@ cat <<EOF | oc apply -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: $APP_UID
+  name: $ARGO_APP_NAME
   namespace: $ARGO_NAMESPACE
   labels:
-    env: dev
-    team: application
-    author: renato
+    env: $ARGO_ENV
+    team: $ARGO_TEAM
+    author: $ARGO_AUTHOR
 spec:
   project: default
   source:
@@ -29,7 +35,7 @@ spec:
     path: .
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: $APP_NAMESPACE
+    namespace: $NAMESPACE
   syncPolicy:
     automated:
       prune: true
